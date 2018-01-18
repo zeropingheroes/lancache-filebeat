@@ -1,8 +1,8 @@
+name: "lancache"
 filebeat.prospectors:
-- input_type: log
+- type: log
   paths:
     - ${CACHE_LOGS_DIRECTORY}/*.log
-  document_type: lancache
 
 output.logstash:
   hosts: ["${LOGSTASH_HOST}"]
