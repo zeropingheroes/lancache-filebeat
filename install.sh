@@ -22,6 +22,10 @@ fi
 : "${CACHE_LOGS_DIRECTORY:?must be set}"
 : "${LOGSTASH_HOST:?must be set}"
 
+# Install apt-transport-https 
+/usr/bin/apt update -y
+/usr/bin/apt install -y apt-transport-https
+
 # Add elastic apt repo if it does not already exist
 if [[ ! -f /etc/apt/sources.list.d/elastic-6.x.list ]]; then
     echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
@@ -30,10 +34,9 @@ fi
 # Install the key for the elastic repo
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 
-# Install required packages
+# Install filebeat
 /usr/bin/apt update -y
-/usr/bin/apt install -y apt-transport-https \
-                        filebeat
+/usr/bin/apt install -y filebeat
 
 # Install the filebeat config file
 /usr/bin/envsubst '$LOGSTASH_HOST $CACHE_LOGS_DIRECTORY' < "$SCRIPT_DIR/configs/filebeat.yml.templ" > "/etc/filebeat/filebeat.yml"
